@@ -40,9 +40,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void show()
     {
-        listAdapter = new DataAdapter(data.getVideo());
+        listAdapter = new DataAdapter(data.getVideo(),this);
         audioList.setAdapter(listAdapter);
         text.setText(data.getVideo().getVidTitle());
+    }
+
+    public void downloadUrl(String url)
+    {
+        //Asynctask
+        return;
     }
 
 }
