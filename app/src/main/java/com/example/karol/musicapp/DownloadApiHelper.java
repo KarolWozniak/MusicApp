@@ -23,11 +23,12 @@ import retrofit2.Retrofit;
 public class DownloadApiHelper {
     private String fileName;
     private String Url;
-
-    public DownloadApiHelper(String fileName,String Url)
+    private MainActivity mainActivity;
+    public DownloadApiHelper(String fileName,String Url,MainActivity mainActivity)
     {
         this.fileName=fileName;
         this.Url=Url;
+        this.mainActivity=mainActivity;
         init();
     }
 
@@ -50,6 +51,7 @@ public class DownloadApiHelper {
                     protected Void doInBackground(Void... params) {
                         if(writeResponseBodyToDisk(response.body().byteStream())==true)
                         {
+                            mainActivity.stopProgress();
                             return null;
                         }
                         return null;

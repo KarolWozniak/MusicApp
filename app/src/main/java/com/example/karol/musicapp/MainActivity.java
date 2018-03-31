@@ -18,6 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.roger.catloadinglibrary.CatLoadingView;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,11 +40,11 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.text)TextView text;
     @BindView(R.id.button)Button button;
     @BindView(R.id.my_recycler_view)RecyclerView audioList;
-    @BindView(R.id.progress)ProgressBar progressBar;
 
     private DataApiHelper data;
     private RecyclerView.Adapter listAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private CatLoadingView catProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,13 +84,19 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     }
-
+//watch?v=elwTgpHlty0
     public void downloadUrl(String url)
     {
-        progressBar.setVisibility(View.VISIBLE);
+        this.catProgress=new CatLoadingView();
+        this.catProgress.show(getSupportFragmentManager(),"");
         boolean a=isStoragePermissionGranted();
-        DownloadApiHelper downloadApi=new DownloadApiHelper(data.getVideo().getVidTitle(),url);
+        DownloadApiHelper downloadApi=new DownloadApiHelper(data.getVideo().getVidTitle(),url,this);
         Toast.makeText(MainActivity.this,"Download ends successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    public void stopProgress()
+    {
+        this.catProgress.dismiss();
     }
 
 }
