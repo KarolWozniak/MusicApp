@@ -115,6 +115,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder>{
         }
         return null;
     }
+
     @Override
     public int getItemCount() {
         return 5;
