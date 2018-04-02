@@ -48,7 +48,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder>{
     public DataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
         TextView v = (TextView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.support_simple_spinner_dropdown_item, parent, false);
+                .inflate(R.layout.data_item, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
