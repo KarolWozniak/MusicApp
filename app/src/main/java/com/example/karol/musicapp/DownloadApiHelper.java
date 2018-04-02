@@ -1,11 +1,19 @@
 package com.example.karol.musicapp;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import java.io.File;
@@ -21,6 +29,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class DownloadApiHelper {
+
+    private static final int NOTIFICATION_ID=2150;
+
     private String fileName;
     private String Url;
     private MainActivity mainActivity;
@@ -51,8 +62,8 @@ public class DownloadApiHelper {
                     protected Void doInBackground(Void... params) {
                         if(writeResponseBodyToDisk(response.body().byteStream())==true)
                         {
-                            mainActivity.stopProgress();
-                            return null;
+                            showNotification();
+                            stopAnim();
                         }
                         return null;
                     }
@@ -63,7 +74,22 @@ public class DownloadApiHelper {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             }
+
         });
+    }
+
+    private void stopAnim()
+    {
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run()
+            {
+                mainActivity.stopProgress();
+            }
+        };
+        mainHandler.post(myRunnable);
     }
 
     private boolean writeResponseBodyToDisk(InputStream body) {
@@ -107,6 +133,27 @@ public class DownloadApiHelper {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    private void showNotification()
+    {
+        Intent intent=new Intent(mainActivity.getApplicationContext(),DownloadApiHelper.class);
+        TaskStackBuilder stackBuilder=TaskStackBuilder.create(mainActivity.getApplicationContext());
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(intent);
+        PendingIntent pendingIntent=
+                stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+        Notification notification=new Notification.Builder(mainActivity.getApplicationContext())
+                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setContentTitle("MusicApp")
+                .setAutoCancel(true)
+                .setPriority(Notification.PRIORITY_MAX)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setContentIntent(pendingIntent)
+                .setContentText("Downloading "+this.fileName+" ends successfully")
+                .build();
+        NotificationManager notificationManager=(NotificationManager)mainActivity.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(NOTIFICATION_ID,notification);
     }
 
 }

@@ -1,19 +1,28 @@
 package com.example.karol.musicapp;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +45,7 @@ import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
+
     @BindView(R.id.editText) EditText url;
     @BindView(R.id.text)TextView text;
     @BindView(R.id.button)Button button;
@@ -45,15 +55,21 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter listAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private CatLoadingView catProgress;
+    private boolean isRunning;
+    private boolean progressVisible;
+    private boolean progressStop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        audioList.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        audioList.setLayoutManager(mLayoutManager);
+        this.audioList.setHasFixedSize(true);
+        this.mLayoutManager = new LinearLayoutManager(this);
+        this.audioList.setLayoutManager(this.mLayoutManager);
+        this.isRunning=true;
+        this.progressVisible=false;
+        this.progressStop=false;
     }
 
     public void check(View view){
@@ -84,19 +100,50 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     }
-//watch?v=elwTgpHlty0
+
     public void downloadUrl(String url)
     {
+        this.progressVisible=true;
         this.catProgress=new CatLoadingView();
         this.catProgress.show(getSupportFragmentManager(),"");
         boolean a=isStoragePermissionGranted();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        this.catProgress.setText("Downloading");
+        this.catProgress.setCancelable(false);
         DownloadApiHelper downloadApi=new DownloadApiHelper(data.getVideo().getVidTitle(),url,this);
-        Toast.makeText(MainActivity.this,"Download ends successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        this.isRunning=false;
+    }
+
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        this.isRunning=true;
+        if(progressStop) {
+            stopProgress();
+        }
     }
 
     public void stopProgress()
     {
-        this.catProgress.dismiss();
+        if(this.isRunning && this.progressVisible) {
+            Toast.makeText(MainActivity.this, "Download ends successfully", Toast.LENGTH_SHORT).show();
+            this.catProgress.dismiss();
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            this.progressVisible=false;
+        }
+        else
+        {
+            progressStop=true;
+        }
     }
 
+//watch?v=O4irXQhgMqg
 }

@@ -17,10 +17,11 @@ public class Parser {
     {
         String new_one="";
         String temp="";
-        CharSequence cs="watch?v=";
+        CharSequence computerLink="watch?v=";
+        CharSequence mobileLink="youtu.be/";
         boolean flag=false;
         for (char ch: string.toCharArray()) {
-            if(temp.contains(cs))
+            if(temp.contains(computerLink)||temp.contains(mobileLink))
             {
                 flag=true;
             }
