@@ -1,9 +1,13 @@
 package com.example.karol.musicapp;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        getIntentData();
+        checkNotification();
         this.audioList.setHasFixedSize(true);
         this.mLayoutManager = new LinearLayoutManager(this);
         this.audioList.setLayoutManager(this.mLayoutManager);
@@ -50,6 +56,19 @@ public class MainActivity extends AppCompatActivity {
         this.progressStop=false;
     }
 
+    public void getIntentData()
+    {
+        Intent intent=getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+        if(Intent.ACTION_SEND.equals(action) && type != null)
+        {
+            if ("text/plain".equals(type)) {
+                String urlNew=intent.getStringExtra(Intent.EXTRA_TEXT);
+                this.url.setText(urlNew);
+            }
+        }
+    }
     public void check(View view){
         Parser parser = new Parser(this.url.getText().toString());
         text.setText(parser.getRight_link());
@@ -104,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onRestart();
         this.isRunning=true;
-        if(progressStop) {
+        if(this.progressStop) {
             stopProgress();
         }
     }
@@ -119,8 +138,19 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            progressStop=true;
+            this.progressStop=true;
         }
     }
-//watch?v=C7IYYfrAE6A
+
+    void checkNotification() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            NotificationChannel channel = new NotificationChannel("MusicApp", name, NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(description);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(
+                    NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 }

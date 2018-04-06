@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -27,6 +28,7 @@ import retrofit2.Retrofit;
 public class DownloadApiHelper {
 
     private static final int NOTIFICATION_ID=2150;
+    private static final String CHANNEL_NAME="MusicApp";
 
     private String fileName;
     private String Url;
@@ -56,7 +58,7 @@ public class DownloadApiHelper {
                 new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected Void doInBackground(Void... params) {
-                        if(writeResponseBodyToDisk(response.body().byteStream())==true)
+                        if(writeResponseBodyToDisk(response.body().byteStream()))
                         {
                             showNotification();
                             stopAnim();
@@ -90,8 +92,8 @@ public class DownloadApiHelper {
 
     private boolean writeResponseBodyToDisk(InputStream body) {
         try {
-            String filePath=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC) + "/"+this.fileName+".mp3";
-            File audioFile = new File(filePath);
+            File filePath=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+            File audioFile = new File(filePath, this.fileName+".mp3");
             InputStream inputStream = null;
             OutputStream outputStream = null;
 
@@ -139,15 +141,29 @@ public class DownloadApiHelper {
         stackBuilder.addNextIntent(intent);
         PendingIntent pendingIntent=
                 stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification notification=new Notification.Builder(mainActivity.getApplicationContext())
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentTitle("MusicApp")
-                .setAutoCancel(true)
-                .setPriority(Notification.PRIORITY_MAX)
-                .setDefaults(Notification.DEFAULT_VIBRATE)
-                .setContentIntent(pendingIntent)
-                .setContentText("Downloading "+this.fileName+" ends successfully")
-                .build();
+        Notification notification;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notification = new Notification.Builder(mainActivity.getApplicationContext(),CHANNEL_NAME)
+                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                    .setContentTitle("MusicApp")
+                    .setAutoCancel(true)
+                    .setPriority(Notification.PRIORITY_MAX)
+                    .setDefaults(Notification.DEFAULT_VIBRATE)
+                    .setContentIntent(pendingIntent)
+                    .setContentText("Downloading " + this.fileName + " ends successfully")
+                    .build();
+        }
+        else {
+            notification = new Notification.Builder(mainActivity.getApplicationContext())
+                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                    .setContentTitle("MusicApp")
+                    .setAutoCancel(true)
+                    .setPriority(Notification.PRIORITY_MAX)
+                    .setDefaults(Notification.DEFAULT_VIBRATE)
+                    .setContentIntent(pendingIntent)
+                    .setContentText("Downloading " + this.fileName + " ends successfully")
+                    .build();
+        }
         NotificationManager notificationManager=(NotificationManager)mainActivity.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(NOTIFICATION_ID,notification);
     }
