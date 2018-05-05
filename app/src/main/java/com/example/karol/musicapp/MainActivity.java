@@ -152,4 +152,10 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
+
+    public void goPlay(View view)
+    {
+        Intent intent=new Intent(this,PlayerActivity.class);
+        startActivity(intent);
+    }
 }

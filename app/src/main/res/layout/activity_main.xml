@@ -36,6 +36,12 @@
         tools:layout_editor_absoluteX="147dp"
         tools:layout_editor_absoluteY="177dp" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="playIt"
+            android:onClick="goPlay"/>
+
     <TextView
             android:id="@+id/text"
             android:layout_width="wrap_content"
