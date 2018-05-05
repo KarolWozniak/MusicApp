@@ -4,6 +4,7 @@ import android.util.Log;
 
 
 import Json.Video;
+import Json.downloadURL;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -17,39 +18,41 @@ import retrofit2.http.Url;
 
 public class DataApiHelper {
     public final DataApi api;
-    private Video video;
+    //private Video video;
+    private downloadURL videoUrl;
     private MainActivity mainActivity;
     public DataApiHelper (String url, final MainActivity mainActivity)
     {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://youtubetoany.com/@api/json/mp3/")
+                //.baseUrl("https://youtubetoany.com/@api/json/mp3/")
+                .baseUrl("http://207.154.200.78:1997/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         this.mainActivity=mainActivity;
         api = retrofit.create(DataApi.class);
-        Call<Video> callObject = api.getVideo(url);
-        callObject.enqueue(new Callback<Video>()
+        Call<downloadURL> callObject = api.getVideo(url);
+        callObject.enqueue(new Callback<downloadURL>()
         {
 
             @Override
-            public void onResponse(Call<Video> call, Response<Video> response) {
+            public void onResponse(Call<downloadURL> call, Response<downloadURL> response) {
                 if (response.isSuccessful())
                 {
-                    video = response.body();
+                    videoUrl = response.body();
                     mainActivity.show();
                 }
             }
 
             @Override
-            public void onFailure(Call<Video> call, Throwable t) {
+            public void onFailure(Call<downloadURL> call, Throwable t) {
                 Log.e(" ", t.getLocalizedMessage());
             }
 
         });
     }
-    public Video getVideo()
+    public downloadURL getVideo()
     {
-        return this.video;
+        return this.videoUrl;
     }
 
 }

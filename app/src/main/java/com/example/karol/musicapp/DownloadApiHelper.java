@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,6 +20,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
+import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
+import cafe.adriel.androidaudioconverter.model.AudioFormat;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,7 +48,7 @@ public class DownloadApiHelper {
     private void init()
     {
         Retrofit retrofit = new Retrofit.Builder().
-                baseUrl("https://youtubetoany.com").
+                baseUrl("http://207.154.200.78:1997").
                 build();
 
         DownloadApi retrofitDownload = retrofit.create(DownloadApi.class);
@@ -93,7 +97,7 @@ public class DownloadApiHelper {
     private boolean writeResponseBodyToDisk(InputStream body) {
         try {
             File filePath=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-            File audioFile = new File(filePath, this.fileName+".mp3");
+            File audioFile = new File(filePath, this.fileName+".webm");
             InputStream inputStream = null;
             OutputStream outputStream = null;
 
@@ -117,6 +121,7 @@ public class DownloadApiHelper {
                 }
                 outputStream.flush();
                 Log.d("MainActivity","END Saving");
+                convertFiletoMp3(audioFile);
                 return true;
             } catch (IOException e) {
                 return false;
@@ -131,6 +136,25 @@ public class DownloadApiHelper {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    private void convertFiletoMp3(File file)
+    {
+        IConvertCallback callback = new IConvertCallback() {
+            @Override
+            public void onSuccess(File convertedFile) {
+                Log.d("MainActivity","Saving ends successfully");
+            }
+            @Override
+            public void onFailure(Exception error) {
+                Log.d("MainActivity","Something went wrong with saving! :C");
+            }
+        };
+        AndroidAudioConverter.with(mainActivity)
+                .setFile(file)
+                .setFormat(AudioFormat.MP3)
+                .setCallback(callback)
+                .convert();
     }
 
     private void showNotification()

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import Json.Video;
+import Json.downloadURL;
 
 /**
  * Created by Karol on 2018-03-27.
@@ -15,7 +16,7 @@ import Json.Video;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder>{
     private static MainActivity mainActivity;
-    private Video data;
+    private downloadURL data;
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView mTextView;
         private String Url;
@@ -36,7 +37,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder>{
         }
     }
 
-    public DataAdapter(Video data,MainActivity mainActivity)
+    public DataAdapter(downloadURL data, MainActivity mainActivity)
     {
         this.data=data;
         this.mainActivity=mainActivity;
@@ -62,7 +63,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder>{
     {
         switch(position)
         {
-            case 0:
+            /*case 0:
             {
                 return this.data.getVidInfo().get0().getMp3size();
             }
@@ -81,16 +82,19 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder>{
             case 4:
             {
                 return this.data.getVidInfo().get4().getMp3size();
+            }*/
+            default:
+            {
+                return "Only one option!!";
             }
         }
-        return null;
     }
 
     public String getUrl(int number)
     {
         switch(number)
         {
-            case 0:
+            /*case 0:
             {
                 return this.data.getVidInfo().get0().getDloadUrl();
             }
@@ -109,13 +113,16 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder>{
             case 4:
             {
                 return this.data.getVidInfo().get4().getDloadUrl();
+            }*/
+            default:
+            {
+                return this.data.getDownloadURL();
             }
         }
-        return null;
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return 1;
     }
 }

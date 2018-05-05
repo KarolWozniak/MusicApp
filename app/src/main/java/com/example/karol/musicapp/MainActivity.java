@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -79,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     {
         listAdapter = new DataAdapter(data.getVideo(),this);
         audioList.setAdapter(listAdapter);
-        text.setText(data.getVideo().getVidTitle());
+        text.setText(data.getVideo().toString());
     }
 
     public  boolean isStoragePermissionGranted() {
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         this.catProgress.setText("Downloading");
         this.catProgress.setCancelable(false);
-        DownloadApiHelper downloadApi=new DownloadApiHelper(data.getVideo().getVidTitle(),url,this);
+        DownloadApiHelper downloadApi=new DownloadApiHelper(data.getVideo().toString(),url,this);
     }
 
     @Override
@@ -142,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void checkNotification() {
+    public void checkNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
             String description = getString(R.string.channel_description);

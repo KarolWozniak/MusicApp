@@ -5,7 +5,7 @@ package com.example.karol.musicapp;
  */
 
 public class Parser {
-    private static final String link="https://youtubetoany.com/@api/json/mp3/";
+    private static final String link="http://207.154.200.78:1997/api/converter?url=https://www.youtube.com/watch?v=";
     private String right_link="";
 
     public Parser(String string)
