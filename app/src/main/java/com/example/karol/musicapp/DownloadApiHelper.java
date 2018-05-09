@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -64,8 +63,6 @@ public class DownloadApiHelper {
                     protected Void doInBackground(Void... params) {
                         if(writeResponseBodyToDisk(response.body().byteStream()))
                         {
-                            showNotification();
-                            stopAnim();
                         }
                         return null;
                     }
@@ -138,12 +135,15 @@ public class DownloadApiHelper {
         }
     }
 
-    private void convertFiletoMp3(File file)
+    private void convertFiletoMp3(final File file)
     {
         IConvertCallback callback = new IConvertCallback() {
             @Override
             public void onSuccess(File convertedFile) {
                 Log.d("MainActivity","Saving ends successfully");
+                boolean deleted = file.delete();
+                showNotification();
+                stopAnim();
             }
             @Override
             public void onFailure(Exception error) {

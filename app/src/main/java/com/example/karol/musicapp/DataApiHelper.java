@@ -3,14 +3,12 @@ package com.example.karol.musicapp;
 import android.util.Log;
 
 
-import Json.Video;
 import Json.downloadURL;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Url;
 
 /**
  * Created by Karol on 2018-03-17.
@@ -24,7 +22,6 @@ public class DataApiHelper {
     public DataApiHelper (String url, final MainActivity mainActivity)
     {
         Retrofit retrofit = new Retrofit.Builder()
-                //.baseUrl("https://youtubetoany.com/@api/json/mp3/")
                 .baseUrl("http://207.154.200.78:1997/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

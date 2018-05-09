@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     public void check(View view){
         Parser parser = new Parser(this.url.getText().toString());
         text.setText(parser.getRight_link());
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     {
         listAdapter = new DataAdapter(data.getVideo(),this);
         audioList.setAdapter(listAdapter);
-        text.setText(data.getVideo().toString());
+        text.setText(data.getVideo().getTitle());
     }
 
     public  boolean isStoragePermissionGranted() {
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         this.catProgress.setText("Downloading");
         this.catProgress.setCancelable(false);
-        DownloadApiHelper downloadApi=new DownloadApiHelper(data.getVideo().toString(),url,this);
+        DownloadApiHelper downloadApi=new DownloadApiHelper(data.getVideo().getTitle(),url,this);
     }
 
     @Override

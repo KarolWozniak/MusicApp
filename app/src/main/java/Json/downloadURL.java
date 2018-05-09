@@ -7,6 +7,10 @@ public class downloadURL {
         @Expose
         private String downloadURL;
 
+        @SerializedName("title")
+        @Expose
+        private String title;
+
         public String getDownloadURL() {
             return downloadURL;
         }
@@ -14,7 +18,12 @@ public class downloadURL {
         public void setDownloadURL(String downloadURL) {
             this.downloadURL = downloadURL;
         }
-        public String getVidInfo() {
-            return this.downloadURL;
-    }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
 }

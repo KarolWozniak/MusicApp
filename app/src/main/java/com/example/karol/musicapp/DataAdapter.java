@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import Json.Video;
 import Json.downloadURL;
 
 /**
@@ -61,64 +60,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder>{
 
     public  String whichFun(int position)
     {
-        switch(position)
-        {
-            /*case 0:
-            {
-                return this.data.getVidInfo().get0().getMp3size();
-            }
-            case 1:
-            {
-                return this.data.getVidInfo().get1().getMp3size();
-            }
-            case 2:
-            {
-                return this.data.getVidInfo().get2().getMp3size();
-            }
-            case 3:
-            {
-                return this.data.getVidInfo().get3().getMp3size();
-            }
-            case 4:
-            {
-                return this.data.getVidInfo().get4().getMp3size();
-            }*/
-            default:
-            {
-                return "Only one option!!";
-            }
-        }
+       return "Only one option is available now!!";
     }
 
     public String getUrl(int number)
     {
-        switch(number)
-        {
-            /*case 0:
-            {
-                return this.data.getVidInfo().get0().getDloadUrl();
-            }
-            case 1:
-            {
-                return this.data.getVidInfo().get1().getDloadUrl();
-            }
-            case 2:
-            {
-                return this.data.getVidInfo().get2().getDloadUrl();
-            }
-            case 3:
-            {
-                return this.data.getVidInfo().get3().getDloadUrl();
-            }
-            case 4:
-            {
-                return this.data.getVidInfo().get4().getDloadUrl();
-            }*/
-            default:
-            {
-                return this.data.getDownloadURL();
-            }
-        }
+        return this.data.getDownloadURL();
     }
 
     @Override
