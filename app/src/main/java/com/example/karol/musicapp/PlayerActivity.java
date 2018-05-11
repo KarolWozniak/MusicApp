@@ -3,12 +3,17 @@ package com.example.karol.musicapp;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Environment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,17 +23,23 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
+import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
+import cafe.adriel.androidaudioconverter.model.AudioFormat;
 
 public class PlayerActivity extends AppCompatActivity {
     @BindView(R.id.prev_button)ImageButton prevButton;
     @BindView(R.id.play_button)ImageButton playButton;
     @BindView(R.id.next_button)ImageButton nextButton;
     @BindView(R.id.song_name)TextView textView;
+    @BindView(R.id.fab)FloatingActionButton fabButton;
 
     private List<File>songs;
     private int curr_songNumber;
     private MediaPlayer mediaPlayer;
     private boolean playingSong;
+    private CatLoadingView catProgress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +61,20 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
+    public void checkMp3(String name)
+    {
+        if(name.contains(".mp3"))
+            fabButton.setVisibility(View.INVISIBLE);
+        else
+            fabButton.setVisibility(View.VISIBLE);
+    }
     public void playSong(){
         try {
             if (!this.playingSong) {
                 this.mediaPlayer.setDataSource(this.songs.get(this.curr_songNumber).getPath());
-                this.textView.setText(this.songs.get(this.curr_songNumber).getName());
+                String fileName = this.songs.get(this.curr_songNumber).getName();
+                this.textView.setText(fileName);
+                checkMp3(fileName);
                 this.mediaPlayer.prepare();
             }
             this.mediaPlayer.start();
@@ -62,6 +82,51 @@ public class PlayerActivity extends AppCompatActivity {
         }catch (IOException e) {
             //e.printStackTrace();
         }
+    }
+
+    private void convertFiletoMp3(final File file)
+    {
+        startAnimation();
+        IConvertCallback callback = new IConvertCallback() {
+            @Override
+            public void onSuccess(File convertedFile) {
+                Log.d("MainActivity","Saving ends successfully");
+                file.delete();
+                stopAnimation();
+            }
+            @Override
+            public void onFailure(Exception error) {
+                Log.d("MainActivity","Something went wrong with saving! :C");
+            }
+        };
+        AndroidAudioConverter.with(PlayerActivity.this)
+                .setFile(file)
+                .setFormat(AudioFormat.MP3)
+                .setCallback(callback)
+                .convert();
+    }
+
+    public void startAnimation()
+    {
+        catProgress=new CatLoadingView();
+        catProgress.show(getSupportFragmentManager(),"");
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        catProgress.setText("Converting ...");
+        catProgress.setCancelable(false);
+    }
+
+    public void stopAnimation()
+    {
+        this.catProgress.dismiss();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        refreshList();
+    }
+
+    public void refreshList()
+    {
+        this.songs.clear();
+        getSongs();
     }
 
     @OnClick(R.id.next_button)
@@ -104,4 +169,9 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.fab)
+    public void onFabClick()
+    {
+        convertFiletoMp3(songs.get(curr_songNumber));
+    }
 }

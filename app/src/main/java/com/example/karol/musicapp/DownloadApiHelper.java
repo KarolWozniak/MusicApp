@@ -19,9 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
-import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
-import cafe.adriel.androidaudioconverter.model.AudioFormat;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -63,6 +60,8 @@ public class DownloadApiHelper {
                     protected Void doInBackground(Void... params) {
                         if(writeResponseBodyToDisk(response.body().byteStream()))
                         {
+                            showNotification();
+                            stopAnim();
                         }
                         return null;
                     }
@@ -118,7 +117,6 @@ public class DownloadApiHelper {
                 }
                 outputStream.flush();
                 Log.d("MainActivity","END Saving");
-                convertFiletoMp3(audioFile);
                 return true;
             } catch (IOException e) {
                 return false;
@@ -133,28 +131,6 @@ public class DownloadApiHelper {
         } catch (IOException e) {
             return false;
         }
-    }
-
-    private void convertFiletoMp3(final File file)
-    {
-        IConvertCallback callback = new IConvertCallback() {
-            @Override
-            public void onSuccess(File convertedFile) {
-                Log.d("MainActivity","Saving ends successfully");
-                boolean deleted = file.delete();
-                showNotification();
-                stopAnim();
-            }
-            @Override
-            public void onFailure(Exception error) {
-                Log.d("MainActivity","Something went wrong with saving! :C");
-            }
-        };
-        AndroidAudioConverter.with(mainActivity)
-                .setFile(file)
-                .setFormat(AudioFormat.MP3)
-                .setCallback(callback)
-                .convert();
     }
 
     private void showNotification()
