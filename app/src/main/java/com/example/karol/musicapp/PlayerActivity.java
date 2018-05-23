@@ -17,7 +17,7 @@ import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -45,7 +45,7 @@ public class PlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         ButterKnife.bind(this);
-        this.songs=new LinkedList<>();
+        this.songs=new ArrayList<>();
         this.curr_songNumber=0;
         this.playingSong=false;
         this.mediaPlayer = new MediaPlayer();
@@ -53,39 +53,39 @@ public class PlayerActivity extends AppCompatActivity {
         getSongs();
     }
 
+
     public void getSongs() {
         File filePath= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
         for(File file:filePath.listFiles())
         {
-            this.songs.add(file);
+            songs.add(file);
         }
     }
 
-    public void checkMp3(String name)
-    {
+    public void checkMp3(String name) {
         if(name.contains(".mp3"))
             fabButton.setVisibility(View.INVISIBLE);
         else
             fabButton.setVisibility(View.VISIBLE);
     }
+
     public void playSong(){
         try {
-            if (!this.playingSong) {
-                this.mediaPlayer.setDataSource(this.songs.get(this.curr_songNumber).getPath());
-                String fileName = this.songs.get(this.curr_songNumber).getName();
-                this.textView.setText(fileName);
+            if (!playingSong) {
+                mediaPlayer.setDataSource(songs.get(curr_songNumber).getPath());
+                String fileName = songs.get(curr_songNumber).getName();
+                textView.setText(fileName);
                 checkMp3(fileName);
-                this.mediaPlayer.prepare();
+                mediaPlayer.prepare();
             }
-            this.mediaPlayer.start();
-            this.playingSong = true;
+            mediaPlayer.start();
+            playingSong = true;
         }catch (IOException e) {
             //e.printStackTrace();
         }
     }
 
-    private void convertFiletoMp3(final File file)
-    {
+    private void convertFiletoMp3(final File file) {
         startAnimation();
         IConvertCallback callback = new IConvertCallback() {
             @Override
@@ -96,7 +96,7 @@ public class PlayerActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Exception error) {
-                Log.d("MainActivity","Something went wrong with saving! :C");
+                Log.d("MainActivity","Something went wrong with converting!");
             }
         };
         AndroidAudioConverter.with(PlayerActivity.this)
@@ -106,8 +106,7 @@ public class PlayerActivity extends AppCompatActivity {
                 .convert();
     }
 
-    public void startAnimation()
-    {
+    public void startAnimation() {
         catProgress=new CatLoadingView();
         catProgress.show(getSupportFragmentManager(),"");
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
@@ -116,55 +115,53 @@ public class PlayerActivity extends AppCompatActivity {
         catProgress.setCancelable(false);
     }
 
-    public void stopAnimation()
-    {
-        this.catProgress.dismiss();
+    public void stopAnimation() {
+        catProgress.dismiss();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         refreshList();
     }
 
-    public void refreshList()
-    {
-        this.songs.clear();
+    public void refreshList() {
+        songs.clear();
         getSongs();
     }
 
     @OnClick(R.id.next_button)
     public void nextSong(View view){
-        this.mediaPlayer.reset();
-        this.playingSong=false;
-        if(this.curr_songNumber+1==this.songs.size())
+        mediaPlayer.reset();
+        playingSong=false;
+        if(curr_songNumber+1==this.songs.size())
         {
-            this.curr_songNumber=0;
+            curr_songNumber=0;
         }
         else {
-            this.curr_songNumber++;
+            curr_songNumber++;
         }
         playSong();
     }
 
     @OnClick(R.id.prev_button)
     public void prevSong(View view){
-        this.mediaPlayer.reset();
-        this.playingSong=false;
-        if(this.curr_songNumber==0){
-            this.curr_songNumber=this.songs.size()-1;
+        mediaPlayer.reset();
+        playingSong=false;
+        if(curr_songNumber==0){
+            curr_songNumber=songs.size()-1;
             return;
         }
-        this.curr_songNumber--;
+        curr_songNumber--;
         playSong();
     }
 
     @OnClick(R.id.play_button)
     public void playButton(View view){
-        if(this.mediaPlayer.isPlaying())
+        if(mediaPlayer.isPlaying())
         {
-            this.playButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play));
-            this.mediaPlayer.pause();
+            playButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play));
+            mediaPlayer.pause();
         }
         else
         {
-            this.playButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_pause));
+            playButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_pause));
             playSong();
         }
     }
@@ -174,4 +171,5 @@ public class PlayerActivity extends AppCompatActivity {
     {
         convertFiletoMp3(songs.get(curr_songNumber));
     }
+
 }

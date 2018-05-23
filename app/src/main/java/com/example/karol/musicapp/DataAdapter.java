@@ -16,9 +16,11 @@ import Json.downloadURL;
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder>{
     private static MainActivity mainActivity;
     private downloadURL data;
+
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView mTextView;
         private String Url;
+
         public ViewHolder(TextView v) {
             super(v);
             v.setOnClickListener(this);
@@ -36,8 +38,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder>{
         }
     }
 
-    public DataAdapter(downloadURL data, MainActivity mainActivity)
-    {
+    public DataAdapter(downloadURL data, MainActivity mainActivity) {
         this.data=data;
         this.mainActivity=mainActivity;
     }
@@ -65,7 +66,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder>{
 
     public String getUrl(int number)
     {
-        return this.data.getDownloadURL();
+        return data.getDownloadURL();
     }
 
     @Override

@@ -23,31 +23,25 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class DownloadApiHelper {
 
-    private static final int NOTIFICATION_ID=2150;
-    private static final String CHANNEL_NAME="MusicApp";
+    private static final int NOTIFICATION_ID = 2150;
+    private static final String CHANNEL_NAME = "MusicApp";
 
     private String fileName;
     private String Url;
-    private MainActivity mainActivity;
-    public DownloadApiHelper(String fileName,String Url,MainActivity mainActivity)
-    {
+    private static MainActivity mainActivity;
+
+    public DownloadApiHelper(String fileName,String Url,MainActivity mainActivity) {
         this.fileName=fileName;
         this.Url=Url;
         this.mainActivity=mainActivity;
         init();
     }
 
-    private void init()
-    {
-        Retrofit retrofit = new Retrofit.Builder().
-                baseUrl("http://207.154.200.78:1997").
-                build();
-
-        DownloadApi retrofitDownload = retrofit.create(DownloadApi.class);
+    private void init() {
+        DownloadApi retrofitDownload = RetrofitClient.getClient().create(DownloadApi.class);
 
         Call<ResponseBody> call = retrofitDownload.downloadFileWithDynamicUrlSync(this.Url);
 
@@ -76,10 +70,8 @@ public class DownloadApiHelper {
         });
     }
 
-    private void stopAnim()
-    {
+    private void stopAnim() {
         Handler mainHandler = new Handler(Looper.getMainLooper());
-
         Runnable myRunnable = new Runnable() {
             @Override
             public void run()
@@ -102,7 +94,7 @@ public class DownloadApiHelper {
                 long fileSizeDownloaded = 0;
                 inputStream = body;
                 boolean fileExist=audioFile.exists();
-                if(fileExist==false) {
+                if(fileExist == false) {
                     audioFile.createNewFile();
                 }
                 outputStream = new FileOutputStream(audioFile);
@@ -113,7 +105,7 @@ public class DownloadApiHelper {
                     }
                     outputStream.write(fileReader, 0, read);
                     fileSizeDownloaded += read;
-                    Log.d("MainActivity",new Long(fileSizeDownloaded).toString());
+                    Log.d("MainActivity",Long.toString(fileSizeDownloaded));
                 }
                 outputStream.flush();
                 Log.d("MainActivity","END Saving");
@@ -133,8 +125,7 @@ public class DownloadApiHelper {
         }
     }
 
-    private void showNotification()
-    {
+    private void showNotification() {
         Intent intent=new Intent(mainActivity.getApplicationContext(),DownloadApiHelper.class);
         TaskStackBuilder stackBuilder=TaskStackBuilder.create(mainActivity.getApplicationContext());
         stackBuilder.addParentStack(MainActivity.class);
@@ -147,8 +138,6 @@ public class DownloadApiHelper {
                     .setSmallIcon(R.mipmap.ic_launcher_round)
                     .setContentTitle("MusicApp")
                     .setAutoCancel(true)
-                    .setPriority(Notification.PRIORITY_MAX)
-                    .setDefaults(Notification.DEFAULT_VIBRATE)
                     .setContentIntent(pendingIntent)
                     .setContentText("Downloading " + this.fileName + " ends successfully")
                     .build();

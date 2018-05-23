@@ -7,8 +7,6 @@ import Json.downloadURL;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Karol on 2018-03-17.
@@ -16,17 +14,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DataApiHelper {
     public final DataApi api;
-    //private Video video;
     private downloadURL videoUrl;
     private MainActivity mainActivity;
-    public DataApiHelper (String url, final MainActivity mainActivity)
-    {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://207.154.200.78:1997/api/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    private String url;
+
+    public DataApiHelper (String url, final MainActivity mainActivity) {
         this.mainActivity=mainActivity;
-        api = retrofit.create(DataApi.class);
+        this.api = RetrofitClient.getClient().create(DataApi.class);
+        this.url = url;
+        startDownloading();
+    }
+
+    public void startDownloading() {
         Call<downloadURL> callObject = api.getVideo(url);
         callObject.enqueue(new Callback<downloadURL>()
         {
@@ -47,8 +46,8 @@ public class DataApiHelper {
 
         });
     }
-    public downloadURL getVideo()
-    {
+
+    public downloadURL getVideo() {
         return this.videoUrl;
     }
 

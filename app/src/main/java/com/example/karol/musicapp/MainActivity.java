@@ -49,22 +49,21 @@ public class MainActivity extends AppCompatActivity {
         checkNotification();
         this.audioList.setHasFixedSize(true);
         this.mLayoutManager = new LinearLayoutManager(this);
-        this.audioList.setLayoutManager(this.mLayoutManager);
+        this.audioList.setLayoutManager(mLayoutManager);
         this.isRunning=true;
         this.progressVisible=false;
         this.progressStop=false;
     }
 
-    public void getIntentData()
-    {
+    public void getIntentData() {
         Intent intent=getIntent();
         String action = intent.getAction();
         String type = intent.getType();
         if(Intent.ACTION_SEND.equals(action) && type != null)
         {
             if ("text/plain".equals(type)) {
-                String urlNew=intent.getStringExtra(Intent.EXTRA_TEXT);
-                this.url.setText(urlNew);
+                String urlNew = intent.getStringExtra(Intent.EXTRA_TEXT);
+                url.setText(urlNew);
             }
         }
     }
@@ -72,11 +71,10 @@ public class MainActivity extends AppCompatActivity {
     public void check(View view){
         Parser parser = new Parser(this.url.getText().toString());
         text.setText(parser.getRight_link());
-        this.data=new DataApiHelper(parser.getRight_link(),this);
+        this.data = new DataApiHelper(parser.getRight_link(),this);
     }
 
-    public void show()
-    {
+    public void show() {
         listAdapter = new DataAdapter(data.getVideo(),this);
         audioList.setAdapter(listAdapter);
         text.setText(data.getVideo().getTitle());
@@ -98,47 +96,43 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void downloadUrl(String url)
-    {
-        this.progressVisible=true;
-        this.catProgress=new CatLoadingView();
-        this.catProgress.show(getSupportFragmentManager(),"");
+    public void downloadUrl(String url) {
+        progressVisible=true;
+        catProgress=new CatLoadingView();
+        catProgress.show(getSupportFragmentManager(),"");
         boolean a=isStoragePermissionGranted();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        this.catProgress.setText("Downloading");
-        this.catProgress.setCancelable(false);
+        catProgress.setText("Downloading");
+        catProgress.setCancelable(false);
         DownloadApiHelper downloadApi=new DownloadApiHelper(data.getVideo().getTitle(),url,this);
     }
 
     @Override
-    public void onStop()
-    {
+    public void onStop() {
         super.onStop();
-        this.isRunning=false;
+        isRunning=false;
     }
 
     @Override
-    public void onRestart()
-    {
+    public void onRestart() {
         super.onRestart();
-        this.isRunning=true;
-        if(this.progressStop) {
+        isRunning=true;
+        if(progressStop) {
             stopProgress();
         }
     }
 
-    public void stopProgress()
-    {
+    public void stopProgress() {
         if(this.isRunning && this.progressVisible) {
             Toast.makeText(MainActivity.this, "Download ends successfully", Toast.LENGTH_SHORT).show();
-            this.catProgress.dismiss();
+            catProgress.dismiss();
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            this.progressVisible=false;
+            progressVisible=false;
         }
         else
         {
-            this.progressStop=true;
+            progressStop=true;
         }
     }
 
@@ -154,8 +148,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void goPlay(View view)
-    {
+    public void goPlay(View view) {
         Intent intent=new Intent(this,PlayerActivity.class);
         startActivity(intent);
     }

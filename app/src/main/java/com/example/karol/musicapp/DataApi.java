@@ -1,8 +1,6 @@
 package com.example.karol.musicapp;
 
-import Json.Video;
 import Json.downloadURL;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Url;
