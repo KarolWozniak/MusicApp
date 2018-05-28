@@ -28,6 +28,7 @@ import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
 import cafe.adriel.androidaudioconverter.model.AudioFormat;
 
 public class PlayerActivity extends AppCompatActivity {
+
     @BindView(R.id.prev_button)ImageButton prevButton;
     @BindView(R.id.play_button)ImageButton playButton;
     @BindView(R.id.next_button)ImageButton nextButton;
@@ -50,7 +51,17 @@ public class PlayerActivity extends AppCompatActivity {
         this.playingSong=false;
         this.mediaPlayer = new MediaPlayer();
         this.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        this.mediaPlayer.setOnCompletionListener(mediaPlayer -> playNextSong());
         getSongs();
+    }
+
+    public void playNextSong() {
+        mediaPlayer.stop();
+        mediaPlayer.reset();
+        curr_songNumber = curr_songNumber+1;
+        playingSong = false;
+        changePlayButton();
+        playSong();
     }
 
 
@@ -126,34 +137,8 @@ public class PlayerActivity extends AppCompatActivity {
         getSongs();
     }
 
-    @OnClick(R.id.next_button)
-    public void nextSong(View view){
-        mediaPlayer.reset();
-        playingSong=false;
-        if(curr_songNumber+1==this.songs.size())
-        {
-            curr_songNumber=0;
-        }
-        else {
-            curr_songNumber++;
-        }
-        playSong();
-    }
-
-    @OnClick(R.id.prev_button)
-    public void prevSong(View view){
-        mediaPlayer.reset();
-        playingSong=false;
-        if(curr_songNumber==0){
-            curr_songNumber=songs.size()-1;
-            return;
-        }
-        curr_songNumber--;
-        playSong();
-    }
-
-    @OnClick(R.id.play_button)
-    public void playButton(View view){
+    public void changePlayButton()
+    {
         if(mediaPlayer.isPlaying())
         {
             playButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play));
@@ -164,6 +149,39 @@ public class PlayerActivity extends AppCompatActivity {
             playButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_pause));
             playSong();
         }
+    }
+
+    @OnClick(R.id.next_button)
+    public void nextSong(View view){
+        mediaPlayer.reset();
+        playingSong=false;
+        if(curr_songNumber+1==this.songs.size())
+        {
+            curr_songNumber = 0;
+        }
+        else {
+            curr_songNumber++;
+        }
+        changePlayButton();
+        playSong();
+    }
+
+    @OnClick(R.id.prev_button)
+    public void prevSong(View view){
+        mediaPlayer.reset();
+        playingSong=false;
+        if(curr_songNumber==0){
+            curr_songNumber = songs.size()-1;
+            return;
+        }
+        curr_songNumber--;
+        changePlayButton();
+        playSong();
+    }
+
+    @OnClick(R.id.play_button)
+    public void playButton(View view){
+        changePlayButton();
     }
 
     @OnClick(R.id.fab)
