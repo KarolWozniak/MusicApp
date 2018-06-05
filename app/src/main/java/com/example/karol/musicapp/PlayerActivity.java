@@ -102,8 +102,9 @@ public class PlayerActivity extends AppCompatActivity {
             @Override
             public void onSuccess(File convertedFile) {
                 Log.d("MainActivity","Saving ends successfully");
-                file.delete();
                 stopAnimation();
+                file.delete();
+                refreshList();
             }
             @Override
             public void onFailure(Exception error) {
@@ -129,7 +130,6 @@ public class PlayerActivity extends AppCompatActivity {
     public void stopAnimation() {
         catProgress.dismiss();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        refreshList();
     }
 
     public void refreshList() {

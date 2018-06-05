@@ -5,39 +5,34 @@ package com.example.karol.musicapp;
  */
 
 public class Parser {
+
     private static final String link = "http://207.154.200.78:1997/api/converter?url=https://www.youtube.com/watch?v=";
     private static String mobileLink = "youtu.be/";
     private static String computerLink = "watch?v=";
     private String right_link = "";
 
-    public Parser(String string)
-    {
-        this.right_link=link+search(string);
+    public Parser(String string) {
+        this.right_link = link + search(string);
     }
 
     private String search(String string) {
         String new_one = "";
         String temp = "";
         boolean flag = false;
-        for (char ch: string.toCharArray()) {
-            if(temp.contains(computerLink) || temp.contains(mobileLink))
-            {
+        for (char ch : string.toCharArray()) {
+            if (temp.contains(computerLink) || temp.contains(mobileLink)) {
                 flag = true;
             }
-            if(flag)
-            {
-                new_one+=ch;
-            }
-            else
-            {
-                temp+=ch;
+            if (flag) {
+                new_one += ch;
+            } else {
+                temp += ch;
             }
         }
         return new_one;
     }
 
-    public String getRight_link()
-    {
+    public String getRight_link() {
         return right_link;
     }
 }
