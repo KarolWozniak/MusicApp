@@ -18,8 +18,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.karol.musicapp.network.DataApiHelper;
-import com.example.karol.musicapp.network.DownloadApiHelper;
+import network.DataApiHelper;
+import network.DownloadApiHelper;
 import com.roger.catloadinglibrary.CatLoadingView;
 
 
