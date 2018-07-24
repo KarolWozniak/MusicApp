@@ -1,5 +1,6 @@
 package com.example.karol.musicapp;
 
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Environment;
@@ -34,6 +35,8 @@ public class PlayerActivity extends AppCompatActivity {
     @BindView(R.id.next_button)ImageButton nextButton;
     @BindView(R.id.song_name)TextView textView;
     @BindView(R.id.fab)FloatingActionButton fabButton;
+    @BindView(R.id.my_toolbar)android.support.v7.widget.Toolbar myToolbar;
+    @BindView(R.id.list_button)ImageButton listButton;
 
     private List<File>songs;
     private int curr_songNumber;
@@ -52,7 +55,19 @@ public class PlayerActivity extends AppCompatActivity {
         this.mediaPlayer = new MediaPlayer();
         this.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         this.mediaPlayer.setOnCompletionListener(mediaPlayer -> playNextSong());
+        setSupportActionBar(myToolbar);
         getSongs();
+        getExtras();
+    }
+
+    public void getExtras()
+    {
+        Bundle b = getIntent().getExtras();
+        if(b!=null) {
+            String path = b.getString("SONG_PATH");
+            curr_songNumber = songs.indexOf(new File(path));
+            playSong();
+        }
     }
 
     public void playNextSong() {
@@ -179,6 +194,12 @@ public class PlayerActivity extends AppCompatActivity {
         playSong();
     }
 
+    @OnClick(R.id.list_button)
+    public void gotoList(View view) {
+        Intent intent = new Intent(this, SongsListActivity.class);
+        startActivity(intent);
+    }
+
     @OnClick(R.id.play_button)
     public void playButton(View view){
         changePlayButton();
@@ -189,5 +210,6 @@ public class PlayerActivity extends AppCompatActivity {
     {
         convertFiletoMp3(songs.get(curr_songNumber));
     }
+
 
 }

@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+
+
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 repositories {
     maven {
         url "https://jitpack.io"
@@ -26,7 +30,7 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
-    dataBinding{
+    dataBinding {
         enabled = true
     }
 }
@@ -50,4 +54,5 @@ dependencies {
     compile 'com.roger.catloadinglibrary:catloadinglibrary:1.0.4'
     def lifecycle_version = "1.1.1"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
