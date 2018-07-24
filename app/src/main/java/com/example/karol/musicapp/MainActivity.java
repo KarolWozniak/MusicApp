@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import network.DataApiHelper;
 import network.DownloadApiHelper;
+
 import com.roger.catloadinglibrary.CatLoadingView;
 
 
@@ -29,10 +30,14 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
 
-    @BindView(R.id.editText) EditText url;
-    @BindView(R.id.text)TextView text;
-    @BindView(R.id.button)Button button;
-    @BindView(R.id.my_recycler_view)RecyclerView audioList;
+    @BindView(R.id.editText)
+    EditText url;
+    @BindView(R.id.text)
+    TextView text;
+    @BindView(R.id.button)
+    Button button;
+    @BindView(R.id.my_recycler_view)
+    RecyclerView audioList;
 
     private DataApiHelper data;
     private RecyclerView.Adapter listAdapter;
@@ -52,17 +57,16 @@ public class MainActivity extends AppCompatActivity {
         this.audioList.setHasFixedSize(true);
         this.mLayoutManager = new LinearLayoutManager(this);
         this.audioList.setLayoutManager(mLayoutManager);
-        this.isRunning=true;
-        this.progressVisible=false;
-        this.progressStop=false;
+        this.isRunning = true;
+        this.progressVisible = false;
+        this.progressStop = false;
     }
 
     public void getIntentData() {
-        Intent intent=getIntent();
+        Intent intent = getIntent();
         String action = intent.getAction();
         String type = intent.getType();
-        if(Intent.ACTION_SEND.equals(action) && type != null)
-        {
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
             if ("text/plain".equals(type)) {
                 String urlNew = intent.getStringExtra(Intent.EXTRA_TEXT);
                 url.setText(urlNew);
@@ -70,71 +74,67 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void check(View view){
+    public void check(View view) {
         Parser parser = new Parser(this.url.getText().toString());
         text.setText(parser.getRight_link());
-        this.data = new DataApiHelper(parser.getRight_link(),this);
+        data = new DataApiHelper(parser.getRight_link(), this);
     }
 
     public void show() {
-        listAdapter = new DataAdapter(data.getVideo(),this);
+        listAdapter = new DataAdapter(data.getVideo(), this);
         audioList.setAdapter(listAdapter);
         text.setText(data.getVideo().getTitle());
     }
 
-    public  boolean isStoragePermissionGranted() {
+    public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
                 return true;
-            }
-            else {
+            } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
-        }
-        else {
+        } else {
             return true;
         }
     }
 
     public void downloadUrl(String url) {
-        progressVisible=true;
-        catProgress=new CatLoadingView();
-        catProgress.show(getSupportFragmentManager(),"");
-        boolean a=isStoragePermissionGranted();
+        progressVisible = true;
+        catProgress = new CatLoadingView();
+        catProgress.show(getSupportFragmentManager(), "");
+        boolean a = isStoragePermissionGranted();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         catProgress.setText("Downloading");
         catProgress.setCancelable(false);
-        DownloadApiHelper downloadApi=new DownloadApiHelper(data.getVideo().getTitle(),url,this);
+        DownloadApiHelper downloadApi = new DownloadApiHelper(data.getVideo().getTitle(), url, this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        isRunning=false;
+        isRunning = false;
     }
 
     @Override
     public void onRestart() {
         super.onRestart();
-        isRunning=true;
-        if(progressStop) {
+        isRunning = true;
+        if (progressStop) {
             stopProgress();
         }
     }
 
     public void stopProgress() {
-        if(this.isRunning && this.progressVisible) {
+        if (this.isRunning && this.progressVisible) {
             Toast.makeText(MainActivity.this, "Download ends successfully", Toast.LENGTH_SHORT).show();
             catProgress.dismiss();
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            progressVisible=false;
-        }
-        else
-        {
-            progressStop=true;
+            progressVisible = false;
+        } else {
+            progressStop = true;
         }
     }
 
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goPlay(View view) {
-        Intent intent=new Intent(this,PlayerActivity.class);
+        Intent intent = new Intent(this, PlayerActivity.class);
         startActivity(intent);
     }
 }
