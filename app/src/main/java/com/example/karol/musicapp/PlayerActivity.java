@@ -1,9 +1,10 @@
 package com.example.karol.musicapp;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.os.Environment;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,9 +18,6 @@ import android.widget.TextView;
 import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,26 +36,49 @@ public class PlayerActivity extends AppCompatActivity {
     @BindView(R.id.my_toolbar)android.support.v7.widget.Toolbar myToolbar;
     @BindView(R.id.list_button)ImageButton listButton;
 
-    private List<File>songs;
-    private int curr_songNumber;
-    private MediaPlayer mediaPlayer;
-    private boolean playingSong;
+    private String songName;
     private CatLoadingView catProgress;
+    private MusicPlayerService musicService;
+    private Intent playIntent;
+    private ServiceConnection musicConnection=new ServiceConnection()
+    {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            MusicPlayerService.MyBinder binder=(MusicPlayerService.MyBinder)iBinder;
+            musicService=binder.getService();
+            getExtras();
+            Log.d("PlayerActivity","MusicService is connected!");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            Log.d("PlayerActivity","MusicService is disconnected!");
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         ButterKnife.bind(this);
-        this.songs=new ArrayList<>();
-        this.curr_songNumber=0;
-        this.playingSong=false;
-        this.mediaPlayer = new MediaPlayer();
-        this.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        this.mediaPlayer.setOnCompletionListener(mediaPlayer -> playNextSong());
         setSupportActionBar(myToolbar);
-        getSongs();
-        getExtras();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(playIntent==null){
+            playIntent = new Intent(this, MusicPlayerService.class);
+            startService(playIntent);
+            bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(playIntent);
+        musicService=null;
+        super.onDestroy();
     }
 
     public void getExtras()
@@ -65,50 +86,16 @@ public class PlayerActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         if(b!=null) {
             String path = b.getString("SONG_PATH");
-            curr_songNumber = songs.indexOf(new File(path));
-            playSong();
+            musicService.setSong(path);
+            changePlayButton();
         }
     }
 
-    public void playNextSong() {
-        mediaPlayer.stop();
-        mediaPlayer.reset();
-        curr_songNumber = curr_songNumber+1;
-        playingSong = false;
-        changePlayButton();
-        playSong();
-    }
-
-
-    public void getSongs() {
-        File filePath= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-        for(File file:filePath.listFiles())
-        {
-            songs.add(file);
-        }
-    }
-
-    public void checkMp3(String name) {
-        if(name.contains(".mp3"))
+    public void checkMp3() {
+        if(songName.contains(".mp3"))
             fabButton.setVisibility(View.INVISIBLE);
         else
             fabButton.setVisibility(View.VISIBLE);
-    }
-
-    public void playSong(){
-        try {
-            if (!playingSong) {
-                mediaPlayer.setDataSource(songs.get(curr_songNumber).getPath());
-                String fileName = songs.get(curr_songNumber).getName();
-                textView.setText(fileName);
-                checkMp3(fileName);
-                mediaPlayer.prepare();
-            }
-            mediaPlayer.start();
-            playingSong = true;
-        }catch (IOException e) {
-            //e.printStackTrace();
-        }
     }
 
     private void convertFiletoMp3(final File file) {
@@ -148,50 +135,36 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     public void refreshList() {
-        songs.clear();
-        getSongs();
+        //songs.clear();
+        //getSongs();
     }
 
     public void changePlayButton()
     {
-        if(mediaPlayer.isPlaying())
+        if(musicService.isPlaying())
         {
             playButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play));
-            mediaPlayer.pause();
+            musicService.pauseSong();
         }
         else
         {
             playButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_pause));
-            playSong();
+            songName=musicService.playSong();
+            textView.setText(songName);
+            checkMp3();
         }
     }
 
     @OnClick(R.id.next_button)
     public void nextSong(View view){
-        mediaPlayer.reset();
-        playingSong=false;
-        if(curr_songNumber+1==this.songs.size())
-        {
-            curr_songNumber = 0;
-        }
-        else {
-            curr_songNumber++;
-        }
+        musicService.nextSong();
         changePlayButton();
-        playSong();
     }
 
     @OnClick(R.id.prev_button)
     public void prevSong(View view){
-        mediaPlayer.reset();
-        playingSong=false;
-        if(curr_songNumber==0){
-            curr_songNumber = songs.size()-1;
-            return;
-        }
-        curr_songNumber--;
+        musicService.prevSong();
         changePlayButton();
-        playSong();
     }
 
     @OnClick(R.id.list_button)
@@ -208,8 +181,7 @@ public class PlayerActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     public void onFabClick()
     {
-        convertFiletoMp3(songs.get(curr_songNumber));
+        convertFiletoMp3(musicService.getFile());
     }
-
 
 }

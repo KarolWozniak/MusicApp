@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.widget.LinearLayoutManager
+import com.example.karol.musicapp.Adapter.SongsAdapter
 import kotlinx.android.synthetic.main.activity_songs_list.*
 import java.io.File
 

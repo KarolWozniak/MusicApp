@@ -21,6 +21,7 @@ import android.widget.Toast;
 import network.DataApiHelper;
 import network.DownloadApiHelper;
 
+import com.example.karol.musicapp.Adapter.DataAdapter;
 import com.roger.catloadinglibrary.CatLoadingView;
 
 

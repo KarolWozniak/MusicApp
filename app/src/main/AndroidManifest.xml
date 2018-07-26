@@ -32,6 +32,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SongsListActivity" />
+        <service android:name=".MusicPlayerService" android:enabled="true" />
     </application>
 
 </manifest>
