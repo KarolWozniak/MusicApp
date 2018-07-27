@@ -40,7 +40,8 @@ public class Parser {
         return right_link;
     }
 
-    public String getVideoId() {
-        return videoId;
+    public String getImageLink() {
+        return "https://img.youtube.com/vi/" + videoId + "/hqdefault.jpg";
     }
+
 }

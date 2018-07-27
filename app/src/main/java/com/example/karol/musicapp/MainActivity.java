@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         listAdapter = new DataAdapter(data.getVideo(), this);
         audioList.setAdapter(listAdapter);
         text.setText(data.getVideo().getTitle());
-        Picasso.get().load("https://img.youtube.com/vi/"+parser.getVideoId()+"/hqdefault.jpg").into(imageSong);
+        Picasso.get().load(parser.getImageLink()).into(imageSong);
     }
 
     public boolean isStoragePermissionGranted() {

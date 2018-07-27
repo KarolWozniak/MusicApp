@@ -23,14 +23,14 @@ class MusicPlayerService() : Service(), MediaPlayer.OnCompletionListener, MediaP
         super.onCreate()
         songs = arrayListOf()
         getSongs()
-        mediaPlayer=MediaPlayer().apply {
+        mediaPlayer = MediaPlayer().apply {
             setOnCompletionListener(this@MusicPlayerService)
             setOnPreparedListener(this@MusicPlayerService)
         }
     }
 
     override fun onCompletion(p0: MediaPlayer?) {
-        playSong()
+        playNextSong()
     }
 
     override fun onPrepared(p0: MediaPlayer?) {
@@ -42,6 +42,7 @@ class MusicPlayerService() : Service(), MediaPlayer.OnCompletionListener, MediaP
     }
 
     fun getSongs() {
+        songs!!.clear()
         val filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
         for (file in filePath.listFiles()!!) {
             songs?.add(file)
@@ -49,7 +50,6 @@ class MusicPlayerService() : Service(), MediaPlayer.OnCompletionListener, MediaP
     }
 
     fun playNextSong() {
-        mediaPlayer?.stop()
         mediaPlayer?.reset()
         songNumber ++
         playingSong = false
@@ -64,7 +64,6 @@ class MusicPlayerService() : Service(), MediaPlayer.OnCompletionListener, MediaP
         } else {
             songNumber++
         }
-        playSong()
     }
 
     fun prevSong() {
@@ -75,7 +74,6 @@ class MusicPlayerService() : Service(), MediaPlayer.OnCompletionListener, MediaP
             return
         }
         songNumber--
-        playSong()
     }
 
     fun playSong(): String {

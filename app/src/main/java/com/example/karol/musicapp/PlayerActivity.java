@@ -102,15 +102,14 @@ public class PlayerActivity extends AppCompatActivity {
             fabButton.setVisibility(View.VISIBLE);
     }
 
-    private void convertFiletoMp3(final File file) {
+    private void convertFileToMp3(final File file) {
         startAnimation();
         IConvertCallback callback = new IConvertCallback() {
             @Override
             public void onSuccess(File convertedFile) {
                 Log.d("MainActivity","Saving ends successfully");
-                stopAnimation();
                 file.delete();
-                refreshList();
+                PlayerActivity.this.runOnUiThread(() -> refreshList());
             }
             @Override
             public void onFailure(Exception error) {
@@ -139,8 +138,8 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     public void refreshList() {
-        //songs.clear();
-        //getSongs();
+        musicService.getSongs();
+        stopAnimation();
     }
 
     public void changePlayButton()
@@ -185,7 +184,7 @@ public class PlayerActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     public void onFabClick()
     {
-        convertFiletoMp3(musicService.getFile());
+        convertFileToMp3(musicService.getFile());
     }
 
 }
