@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import network.DownloadApiHelper;
 
 import com.example.karol.musicapp.Adapter.DataAdapter;
 import com.roger.catloadinglibrary.CatLoadingView;
+import com.squareup.picasso.Picasso;
 
 
 import butterknife.BindView;
@@ -31,14 +33,11 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
 
-    @BindView(R.id.editText)
-    EditText url;
-    @BindView(R.id.text)
-    TextView text;
-    @BindView(R.id.button)
-    Button button;
-    @BindView(R.id.my_recycler_view)
-    RecyclerView audioList;
+    @BindView(R.id.editText)EditText url;
+    @BindView(R.id.text)TextView text;
+    @BindView(R.id.button)Button button;
+    @BindView(R.id.my_recycler_view)RecyclerView audioList;
+    @BindView(R.id.imageSong)ImageView imageSong;
 
     private DataApiHelper data;
     private RecyclerView.Adapter listAdapter;
@@ -47,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isRunning;
     private boolean progressVisible;
     private boolean progressStop;
+    private Parser parser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void check(View view) {
-        Parser parser = new Parser(this.url.getText().toString());
+        parser = new Parser(this.url.getText().toString());
         text.setText(parser.getRight_link());
         data = new DataApiHelper(parser.getRight_link(), this);
     }
@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         listAdapter = new DataAdapter(data.getVideo(), this);
         audioList.setAdapter(listAdapter);
         text.setText(data.getVideo().getTitle());
+        Picasso.get().load("https://img.youtube.com/vi/"+parser.getVideoId()+"/hqdefault.jpg").into(imageSong);
     }
 
     public boolean isStoragePermissionGranted() {
@@ -142,9 +143,8 @@ public class MainActivity extends AppCompatActivity {
     public void checkNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
             NotificationChannel channel = new NotificationChannel("MusicApp", name, NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription(description);
+            channel.setDescription(getString(R.string.channel_description));
             NotificationManager notificationManager = (NotificationManager) getSystemService(
                     NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(channel);
@@ -155,4 +155,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PlayerActivity.class);
         startActivity(intent);
     }
+
 }

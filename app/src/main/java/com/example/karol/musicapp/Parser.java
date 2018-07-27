@@ -6,13 +6,17 @@ package com.example.karol.musicapp;
 
 public class Parser {
 
-    private static final String link = "http://207.154.200.78:1997/api/converter?url=https://www.youtube.com/watch?v=";
+    private static final String link = "http://206.189.62.11:1997/api/converter?url=https://www.youtube.com/watch?v=";
     private static String mobileLink = "youtu.be/";
     private static String computerLink = "watch?v=";
     private String right_link = "";
+    private String videoId = "";
 
     public Parser(String string) {
         this.right_link = link + search(string);
+        this.videoId = string.replace(mobileLink ,"")
+                             .replace(computerLink ,"")
+                             .replace("https://","");
     }
 
     private String search(String string) {
@@ -34,5 +38,9 @@ public class Parser {
 
     public String getRight_link() {
         return right_link;
+    }
+
+    public String getVideoId() {
+        return videoId;
     }
 }

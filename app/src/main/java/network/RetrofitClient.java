@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 class RetrofitClient {
     private static Retrofit retrofit = null;
-    private static String URL_ADDRESS = "http://207.154.200.78:1997/api/";
+    private static String URL_ADDRESS = "http://206.189.62.11:1997/api/";
 
     public static Retrofit getClient() {
         if (retrofit == null) {

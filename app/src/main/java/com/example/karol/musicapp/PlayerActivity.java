@@ -13,9 +13,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.roger.catloadinglibrary.CatLoadingView;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
@@ -35,6 +37,7 @@ public class PlayerActivity extends AppCompatActivity {
     @BindView(R.id.fab)FloatingActionButton fabButton;
     @BindView(R.id.my_toolbar)android.support.v7.widget.Toolbar myToolbar;
     @BindView(R.id.list_button)ImageButton listButton;
+    @BindView(R.id.imageview)ImageView imageView;
 
     private String songName;
     private CatLoadingView catProgress;
@@ -62,6 +65,7 @@ public class PlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_player);
         ButterKnife.bind(this);
         setSupportActionBar(myToolbar);
+        Picasso.get().load("https://img.youtube.com/vi/1G4isv_Fylg/hqdefault.jpg").into(imageView);
     }
 
     @Override

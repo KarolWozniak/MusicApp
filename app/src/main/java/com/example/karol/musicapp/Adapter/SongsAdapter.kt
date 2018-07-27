@@ -17,13 +17,13 @@ class SongsAdapter (val items : ArrayList<File>, val context: Context) : Recycle
         return items.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.data_item, parent, false))
     }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        holder?.list_item?.text = items.get(position).name
-        holder?.path = items.get(position).path
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.list_item?.text = items.get(position).name
+        holder.path = items.get(position).path
     }
 }
 
