@@ -6,7 +6,7 @@ package com.example.karol.musicapp;
 
 public class Parser {
 
-    private static final String link = "http://206.189.62.11:1997/api/converter?url=https://www.youtube.com/watch?v=";
+    private static final String link = "http://178.128.201.88:1997/api/converter?url=https://www.youtube.com/watch?v=";
     private static String mobileLink = "youtu.be/";
     private static String computerLink = "watch?v=";
     private String right_link = "";

@@ -28,7 +28,7 @@ class SongsAdapter (val items : ArrayList<File>, val context: Context) : Recycle
 }
 
 class ViewHolder (view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
-    val list_item = view.list_item
+    val list_item = view.title
     var path = ""
 
     override fun onClick(p0: View?) {

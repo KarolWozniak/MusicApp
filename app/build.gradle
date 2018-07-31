@@ -4,6 +4,7 @@ apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+
 repositories {
     maven {
         url "https://jitpack.io"
@@ -56,4 +57,9 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.squareup.picasso:picasso:2.71828'
+    def room_version = "1.1.1"
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version"
+    implementation "org.jetbrains.anko:anko-commons:0.10.4"
 }

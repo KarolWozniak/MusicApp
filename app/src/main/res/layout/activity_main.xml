@@ -1,73 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.karol.musicapp.MainActivity"
-    >
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:orientation="vertical"
-        android:gravity="center"
-        >
-
+    tools:context="com.example.karol.musicapp.MainActivity">
 
     <EditText
         android:id="@+id/editText"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="Url"
-        tools:layout_editor_absoluteX="85dp"
-        tools:layout_editor_absoluteY="81dp" />
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:layout_width="89dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:onClick="check"
         android:text="Check"
-        tools:layout_editor_absoluteX="147dp"
-        tools:layout_editor_absoluteY="177dp" />
+        app:layout_constraintBottom_toTopOf="@+id/text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText" />
 
     <Button
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="playIt"
-         android:onClick="goPlay"/>
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:onClick="goPlay"
+        android:text="playIt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.021"
+        app:layout_constraintStart_toEndOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/editText" />
+
+    <ImageView
+        android:id="@+id/imageSong"
+        android:layout_width="105dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/audio_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="25dp"
-            android:textColor="@color/colorPrimaryDark"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.676"
-            android:padding="10dp"
-        />
-     <ImageView
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:id="@+id/imageSong"
-         />
+        android:id="@+id/text"
+        android:layout_width="337dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:padding="10dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button2" />
 
-     <android.support.v7.widget.RecyclerView
-            android:id="@+id/my_recycler_view"
-            android:scrollbars="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="15sp"
-         />
-    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/audio_list"
+        android:layout_width="153dp"
+        android:layout_height="258dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="60dp"
+        android:paddingLeft="15sp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.306"
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

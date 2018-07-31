@@ -24,10 +24,10 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder>{
         public TextView mTextView;
         private String Url;
 
-        public ViewHolder(TextView v) {
+        public ViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
-            this.mTextView = v;
+            this.mTextView = v.findViewById(R.id.title);
         }
         public void setUrl(String url)
         {
@@ -49,7 +49,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder>{
     @Override
     public DataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
-        TextView v = (TextView) LayoutInflater.from(parent.getContext())
+        View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.data_item, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;

@@ -112,6 +112,7 @@ class MusicPlayerService() : Service(), MediaPlayer.OnCompletionListener, MediaP
 
     inner class MyBinder : Binder() {
         fun getService(): MusicPlayerService? {
+            getSongs()
             return this@MusicPlayerService
         }
     }
