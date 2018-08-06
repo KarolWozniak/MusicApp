@@ -1,4 +1,4 @@
-package com.example.karol.musicapp.Adapter;
+package com.example.karol.musicapp.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.karol.musicapp.MainActivity;
+import com.example.karol.musicapp.activities.MainActivity;
 import com.example.karol.musicapp.R;
 
-import Json.downloadURL;
+import com.example.karol.musicapp.json.downloadURL;
 
 /**
  * Created by Karol on 2018-03-27.

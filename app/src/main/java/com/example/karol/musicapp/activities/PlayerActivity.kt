@@ -1,10 +1,9 @@
-package com.example.karol.musicapp
+package com.example.karol.musicapp.activities
 
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.AsyncTask
 import android.os.Bundle
 import android.os.IBinder
 import android.support.v4.content.ContextCompat
@@ -15,9 +14,14 @@ import android.view.WindowManager
 import cafe.adriel.androidaudioconverter.AndroidAudioConverter
 import cafe.adriel.androidaudioconverter.callback.IConvertCallback
 import cafe.adriel.androidaudioconverter.model.AudioFormat
+import com.example.karol.musicapp.MusicApp
+import com.example.karol.musicapp.R
+import com.example.karol.musicapp.services.MusicPlayerService
 import com.roger.catloadinglibrary.CatLoadingView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_player.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import java.io.File
 
 class PlayerActivity: AppCompatActivity() {
@@ -129,7 +133,16 @@ class PlayerActivity: AppCompatActivity() {
     }
 
     fun setImage() {
-        LoadImageTask().execute()
+        doAsync {
+            var songTitle = songName?.replace(".webm","")?.replace(".mp3","")
+            var res = MusicApp.database?.songDao()?.findSongByName(songTitle)?.image
+            uiThread {
+                if (res != null)
+                    Picasso.get().load(res).into(imageview)
+                else
+                    Picasso.get().load("https://img.youtube.com/vi/1G4isv_Fylg/hqdefault.jpg").into(imageview)
+            }
+        }
     }
 
     fun nextSong(view: View) {
@@ -153,24 +166,6 @@ class PlayerActivity: AppCompatActivity() {
 
     fun onFabClick() {
         convertFileToMp3(musicService!!.getFile())
-    }
-
-    private inner class LoadImageTask : AsyncTask<String, Void, String>() {
-
-        override fun doInBackground(vararg strings: String): String? {
-            var all = MusicApp.database?.songDao()?.getAllSongs()
-            var songTitle = songName?.replace(".webm","")?.replace(".mp3","")
-            var res = MusicApp.database?.songDao()?.findSongByName(songTitle)
-            return res?.image
-        }
-
-        override fun onPostExecute(result: String?) {
-            if (result != null)
-                Picasso.get().load(result).into(imageview)
-            else
-                Picasso.get().load("https://img.youtube.com/vi/1G4isv_Fylg/hqdefault.jpg").into(imageview)
-        }
-
     }
 
 }

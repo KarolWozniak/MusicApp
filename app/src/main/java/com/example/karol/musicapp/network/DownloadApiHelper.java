@@ -1,4 +1,4 @@
-package network;
+package com.example.karol.musicapp.network;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -13,7 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
-import com.example.karol.musicapp.MainActivity;
+import com.example.karol.musicapp.activities.MainActivity;
 import com.example.karol.musicapp.R;
 
 import java.io.File;

@@ -1,4 +1,4 @@
-package com.example.karol.musicapp
+package com.example.karol.musicapp.activities
 
 import android.Manifest
 import android.app.NotificationChannel
@@ -16,13 +16,16 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
-import com.example.karol.musicapp.Adapter.DataAdapter
+import com.example.karol.musicapp.adapter.DataAdapter
 import com.example.karol.musicapp.Data.Song
+import com.example.karol.musicapp.MusicApp
+import com.example.karol.musicapp.Parser
+import com.example.karol.musicapp.R
 import com.roger.catloadinglibrary.CatLoadingView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
-import network.DataApiHelper
-import network.DownloadApiHelper
+import com.example.karol.musicapp.network.DataApiHelper
+import com.example.karol.musicapp.network.DownloadApiHelper
 import org.jetbrains.anko.doAsync
 
 class MainActivity: AppCompatActivity() {
@@ -74,7 +77,7 @@ class MainActivity: AppCompatActivity() {
         Picasso.get().load(parser?.getImageLink()).into(imageSong).toString()
     }
 
-    fun isStoragePermissionGranted(): Boolean {
+    private fun isStoragePermissionGranted(): Boolean {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 return true
@@ -106,7 +109,6 @@ class MainActivity: AppCompatActivity() {
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             progressVisible = false
             val song = Song(data?.getVideo()?.title!!, parser?.getImageLink()!!)
-            Log.d("DAO",song.name + " " + song.image)
             doAsync {
                 val db = MusicApp.database
                 db?.songDao()?.insertSong(song)

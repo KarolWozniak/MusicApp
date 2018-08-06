@@ -1,4 +1,4 @@
-package network;
+package com.example.karol.musicapp.network;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

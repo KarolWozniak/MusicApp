@@ -2,7 +2,6 @@
     <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,21 +26,32 @@
             android:layout_alignParentRight="true"
             android:background="@drawable/baseline_list" />
     </android.support.v7.widget.Toolbar>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/coordinator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
+        android:padding="5dp">
     <ImageView
         android:id="@+id/imageview"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
         android:background="@drawable/bordershape"
-        android:src="@drawable/ic_audiotrack"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
-
+        android:src="@drawable/ic_audiotrack" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="53dp"
+            android:layout_height="55dp"
+            android:onClick="onFabClick"
+            android:src="@drawable/ic_mp3_outline"
+            app:layout_anchor="@+id/imageview"
+            android:layout_gravity="bottom|right"
+            app:layout_anchorGravity="right|end|bottom" />
+    </android.support.design.widget.CoordinatorLayout>
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="0dp"
@@ -49,7 +59,7 @@
         android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageview">
+        app:layout_constraintTop_toBottomOf="@+id/coordinator">
 
         <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/card_view"
@@ -126,13 +136,13 @@
 
         <ImageButton
             android:id="@+id/next_button"
-            android:layout_width="80dp"
+            android:layout_width="83dp"
             android:layout_height="60dp"
-            android:onClick="nextSong"
             android:layout_marginStart="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginTop="8dp"
             android:background="@android:color/white"
+            android:onClick="nextSong"
             android:scaleType="fitXY"
             android:src="@drawable/next_dark"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -142,18 +152,4 @@
             app:layout_constraintVertical_bias="0.69" />
     </android.support.constraint.ConstraintLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="53dp"
-        android:layout_height="55dp"
-        android:layout_margin="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:src="@drawable/ic_mp3_outline"
-        app:layout_anchor="@id/container"
-        app:layout_anchorGravity="bottom|right"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:onClick="onFabClick"/>
     </android.support.constraint.ConstraintLayout>

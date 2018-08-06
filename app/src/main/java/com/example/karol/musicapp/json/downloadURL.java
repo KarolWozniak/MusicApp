@@ -1,4 +1,4 @@
-package Json;
+package com.example.karol.musicapp.json;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 public class downloadURL {

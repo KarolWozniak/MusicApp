@@ -1,11 +1,11 @@
-package network;
+package com.example.karol.musicapp.network;
 
 import android.util.Log;
 
 
-import com.example.karol.musicapp.MainActivity;
+import com.example.karol.musicapp.activities.MainActivity;
 
-import Json.downloadURL;
+import com.example.karol.musicapp.json.downloadURL;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

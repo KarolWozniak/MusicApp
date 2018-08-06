@@ -1,5 +1,5 @@
 
-package com.example.karol.musicapp
+package com.example.karol.musicapp.services
 
 import android.app.Service
 import android.content.Intent
@@ -12,7 +12,7 @@ import java.io.IOException
 
 class MusicPlayerService() : Service(), MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
 
-    private var songs: ArrayList<File>? = null
+    private var songs: ArrayList<File> = arrayListOf()
     private var songNumber: Int = 0
     private var playingSong: Boolean = false
     private var mediaPlayer: MediaPlayer? = null
@@ -21,7 +21,6 @@ class MusicPlayerService() : Service(), MediaPlayer.OnCompletionListener, MediaP
 
     override fun onCreate() {
         super.onCreate()
-        songs = arrayListOf()
         getSongs()
         mediaPlayer = MediaPlayer().apply {
             setOnCompletionListener(this@MusicPlayerService)
@@ -116,6 +115,5 @@ class MusicPlayerService() : Service(), MediaPlayer.OnCompletionListener, MediaP
             return this@MusicPlayerService
         }
     }
-
 
 }

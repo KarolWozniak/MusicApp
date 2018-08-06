@@ -1,11 +1,11 @@
-package network;
+package com.example.karol.musicapp.network;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 class RetrofitClient {
     private static Retrofit retrofit = null;
-    private static String URL_ADDRESS = "http://178.128.201.88:1997/api/";
+    private static String URL_ADDRESS = "http://159.89.111.2:8080";
 
     public static Retrofit getClient() {
         if (retrofit == null) {
