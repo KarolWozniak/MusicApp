@@ -26,8 +26,8 @@ import java.io.File
 
 class PlayerActivity: AppCompatActivity() {
 
-    private var songName: String? = null
-    private var catProgress: CatLoadingView? = null
+    private var songName: String? = ""
+    private var catProgress: CatLoadingView = CatLoadingView()
     private var musicService: MusicPlayerService? = null
     private var playIntent: Intent? = null
     private val musicConnection = object : ServiceConnection {
@@ -101,16 +101,15 @@ class PlayerActivity: AppCompatActivity() {
     }
 
     fun startAnimation() {
-        catProgress = CatLoadingView()
-        catProgress!!.show(supportFragmentManager, "")
+        catProgress.show(supportFragmentManager, "")
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        catProgress!!.setText("Converting ...")
-        catProgress!!.setCancelable(false)
+        catProgress.setText("Converting ...")
+        catProgress.setCancelable(false)
     }
 
     fun stopAnimation() {
-        catProgress?.dismiss()
+        catProgress.dismiss()
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 

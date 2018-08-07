@@ -40,8 +40,8 @@ public class Parser {
         return right_link;
     }
 
-    public String getImageLink() {
-        return "https://img.youtube.com/vi/" + videoId + "/hqdefault.jpg";
+    public String getImage(int number){
+        return "https://img.youtube.com/vi/" + videoId + "/" + number + ".jpg";
     }
 
 }

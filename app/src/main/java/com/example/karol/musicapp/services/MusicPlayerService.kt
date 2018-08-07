@@ -15,25 +15,25 @@ class MusicPlayerService() : Service(), MediaPlayer.OnCompletionListener, MediaP
     private var songs: ArrayList<File> = arrayListOf()
     private var songNumber: Int = 0
     private var playingSong: Boolean = false
-    private var mediaPlayer: MediaPlayer? = null
+    private var mediaPlayer: MediaPlayer = MediaPlayer()
 
 
 
     override fun onCreate() {
         super.onCreate()
         getSongs()
-        mediaPlayer = MediaPlayer().apply {
+        mediaPlayer.apply {
             setOnCompletionListener(this@MusicPlayerService)
             setOnPreparedListener(this@MusicPlayerService)
         }
     }
 
-    override fun onCompletion(p0: MediaPlayer?) {
+    override fun onCompletion(p0: MediaPlayer) {
         playNextSong()
     }
 
-    override fun onPrepared(p0: MediaPlayer?) {
-        mediaPlayer?.start()
+    override fun onPrepared(p0: MediaPlayer) {
+        mediaPlayer.start()
     }
 
     override fun onBind(p0: Intent?): IBinder? {
@@ -41,24 +41,24 @@ class MusicPlayerService() : Service(), MediaPlayer.OnCompletionListener, MediaP
     }
 
     fun getSongs() {
-        songs!!.clear()
+        songs.clear()
         val filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
         for (file in filePath.listFiles()!!) {
-            songs?.add(file)
+            songs.add(file)
         }
     }
 
     fun playNextSong() {
-        mediaPlayer?.reset()
+        mediaPlayer.reset()
         songNumber ++
         playingSong = false
         playSong()
     }
 
     fun nextSong() {
-        mediaPlayer?.reset()
+        mediaPlayer.reset()
         playingSong = false
-        if (songNumber + 1 == songs?.size) {
+        if (songNumber + 1 == songs.size) {
             songNumber = 0
         } else {
             songNumber++
@@ -66,10 +66,10 @@ class MusicPlayerService() : Service(), MediaPlayer.OnCompletionListener, MediaP
     }
 
     fun prevSong() {
-        mediaPlayer?.reset()
+        mediaPlayer.reset()
         playingSong = false
         if (songNumber == 0) {
-            songNumber = songs!!.size - 1
+            songNumber = songs.size - 1
             return
         }
         songNumber--
@@ -78,34 +78,34 @@ class MusicPlayerService() : Service(), MediaPlayer.OnCompletionListener, MediaP
     fun playSong(): String {
         try {
             if (!playingSong) {
-                mediaPlayer?.setDataSource(songs!!.get(songNumber).path)
-                mediaPlayer?.prepareAsync()
+                mediaPlayer.setDataSource(songs.get(songNumber).path)
+                mediaPlayer.prepareAsync()
             } else {
-                mediaPlayer?.start()
+                mediaPlayer.start()
             }
         } catch (e: IOException) {
             //e.printStackTrace();
         }
         playingSong = true
-        return songs!!.get(songNumber).name
+        return songs.get(songNumber).name
     }
 
     fun pauseSong() {
-        mediaPlayer?.pause()
+        mediaPlayer.pause()
     }
 
     fun isPlaying(): Boolean {
-        return mediaPlayer!!.isPlaying
+        return mediaPlayer.isPlaying
     }
 
     fun getFile(): File{
-        return songs!!.get(songNumber)
+        return songs.get(songNumber)
     }
 
     fun setSong(songPath: String){
-        mediaPlayer!!.stop()
-        mediaPlayer!!.reset()
-        songNumber = songs!!.indexOf(File(songPath))
+        mediaPlayer.stop()
+        mediaPlayer.reset()
+        songNumber = songs.indexOf(File(songPath))
         playingSong = false
     }
 

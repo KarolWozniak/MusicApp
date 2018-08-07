@@ -9,7 +9,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AppCompatActivity
+import android.support.v4.app.FragmentActivity
+import android.support.v4.view.PagerAdapter
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -21,23 +22,26 @@ import com.example.karol.musicapp.Data.Song
 import com.example.karol.musicapp.MusicApp
 import com.example.karol.musicapp.Parser
 import com.example.karol.musicapp.R
+import com.example.karol.musicapp.adapter.ImageAdapter
 import com.roger.catloadinglibrary.CatLoadingView
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import com.example.karol.musicapp.network.DataApiHelper
 import com.example.karol.musicapp.network.DownloadApiHelper
 import org.jetbrains.anko.doAsync
 
-class MainActivity: AppCompatActivity() {
+class MainActivity: FragmentActivity() {
 
     private var data: DataApiHelper? = null
-    private var listAdapter: RecyclerView.Adapter<*>? = null
-    private var mLayoutManager: RecyclerView.LayoutManager? = null
-    private var catProgress: CatLoadingView? = null
+    private var parser: Parser? = null
+
     private var isRunning: Boolean = false
     private var progressVisible: Boolean = false
     private var progressStop: Boolean = false
-    private var parser: Parser? = null
+
+    private var listAdapter: RecyclerView.Adapter<*>? = null
+    private var pagerAdapter: PagerAdapter? = null
+    private var mLayoutManager: RecyclerView.LayoutManager? = null
+    private var catProgress =  CatLoadingView()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,10 +50,8 @@ class MainActivity: AppCompatActivity() {
         checkNotification()
         audio_list.setHasFixedSize(true)
         this.mLayoutManager = LinearLayoutManager(this)
-        audio_list.setLayoutManager(mLayoutManager)
+        audio_list.layoutManager = mLayoutManager
         this.isRunning = true
-        this.progressVisible = false
-        this.progressStop = false
     }
 
     fun getIntentData() {
@@ -66,15 +68,16 @@ class MainActivity: AppCompatActivity() {
 
     fun check(view: View) {
         parser = Parser(editText.text.toString())
-        text.text = parser!!.getRight_link()
-        data = DataApiHelper(parser!!.getRight_link(), this)
+        text.text = parser?.right_link
+        data = DataApiHelper(parser!!.right_link, this)
     }
 
     fun show() {
-        listAdapter = DataAdapter(data?.getVideo(), this)
-        audio_list.setAdapter(listAdapter)
-        text.text = data?.getVideo()?.title
-        Picasso.get().load(parser?.getImageLink()).into(imageSong).toString()
+        listAdapter = DataAdapter(data?.video, this)
+        audio_list.adapter = listAdapter
+        text.text = data?.video?.title
+        pagerAdapter = ImageAdapter(supportFragmentManager,parser)
+        imagePager.adapter = pagerAdapter
     }
 
     private fun isStoragePermissionGranted(): Boolean {
@@ -92,27 +95,27 @@ class MainActivity: AppCompatActivity() {
 
     fun downloadUrl(url: String) {
         progressVisible = true
-        catProgress = CatLoadingView()
-        catProgress!!.show(supportFragmentManager, "")
+        catProgress.show(supportFragmentManager, "")
         val a = isStoragePermissionGranted()
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        catProgress!!.setText("Downloading")
-        catProgress!!.setCancelable(false)
-        val downloadApi = DownloadApiHelper(data?.getVideo()?.title, url, this)
+        catProgress.setText("Downloading")
+        catProgress.isCancelable = false
+        val downloadApi = DownloadApiHelper(data?.video?.title, url, this)
     }
 
     fun stopProgress() {
         if (this.isRunning && this.progressVisible) {
             Toast.makeText(this@MainActivity, "Download ends successfully", Toast.LENGTH_SHORT).show()
-            catProgress?.dismiss()
+            catProgress.dismiss()
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             progressVisible = false
-            val song = Song(data?.getVideo()?.title!!, parser?.getImageLink()!!)
+            var imageNumber = imagePager.currentItem
+            val song = Song(data?.video?.title!!, parser!!.getImage(imageNumber))
             doAsync {
                 val db = MusicApp.database
                 db?.songDao()?.insertSong(song)
-                Log.d("DAO","Insert " + song );
+                Log.d("DAO","Insert " + song )
             }
         } else {
             progressStop = true
