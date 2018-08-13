@@ -11,7 +11,7 @@ import java.io.File
 
 class SongsListActivity : AppCompatActivity() {
 
-    val songsList: ArrayList<File> = ArrayList()
+    private val songsList: ArrayList<File> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_songs_list)
@@ -22,8 +22,6 @@ class SongsListActivity : AppCompatActivity() {
 
     fun addSongs(){
         val filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-        for (file in filePath.listFiles()!!) {
-            songsList.add(file)
-        }
+        songsList += filePath.listFiles()
     }
 }

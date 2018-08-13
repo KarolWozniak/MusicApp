@@ -31,16 +31,16 @@ import org.jetbrains.anko.doAsync
 
 class MainActivity: FragmentActivity() {
 
-    private var data: DataApiHelper? = null
-    private var parser: Parser? = null
+    private lateinit var data: DataApiHelper
+    private lateinit var parser: Parser
 
     private var isRunning: Boolean = false
     private var progressVisible: Boolean = false
     private var progressStop: Boolean = false
 
-    private var listAdapter: RecyclerView.Adapter<*>? = null
-    private var pagerAdapter: PagerAdapter? = null
-    private var mLayoutManager: RecyclerView.LayoutManager? = null
+    private lateinit var listAdapter: RecyclerView.Adapter<*>
+    private lateinit var pagerAdapter: PagerAdapter
+    private lateinit var mLayoutManager: RecyclerView.LayoutManager
     private var catProgress =  CatLoadingView()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,14 +68,14 @@ class MainActivity: FragmentActivity() {
 
     fun check(view: View) {
         parser = Parser(editText.text.toString())
-        text.text = parser?.right_link
-        data = DataApiHelper(parser!!.right_link, this)
+        text.text = parser.right_link
+        data = DataApiHelper(parser.right_link, this)
     }
 
     fun show() {
-        listAdapter = DataAdapter(data?.video, this)
+        listAdapter = DataAdapter(data.video, this)
         audio_list.adapter = listAdapter
-        text.text = data?.video?.title
+        text.text = data.video.title
         pagerAdapter = ImageAdapter(supportFragmentManager,parser)
         imagePager.adapter = pagerAdapter
     }
@@ -101,7 +101,7 @@ class MainActivity: FragmentActivity() {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         catProgress.setText("Downloading")
         catProgress.isCancelable = false
-        val downloadApi = DownloadApiHelper(data?.video?.title, url, this)
+        val downloadApi = DownloadApiHelper(data.video.title, url, this)
     }
 
     fun stopProgress() {
@@ -111,7 +111,7 @@ class MainActivity: FragmentActivity() {
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             progressVisible = false
             var imageNumber = imagePager.currentItem
-            val song = Song(data?.video?.title!!, parser!!.getImage(imageNumber))
+            val song = Song(data.video.title, parser.getImage(imageNumber))
             doAsync {
                 val db = MusicApp.database
                 db?.songDao()?.insertSong(song)

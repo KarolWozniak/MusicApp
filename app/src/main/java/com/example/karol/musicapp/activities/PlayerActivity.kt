@@ -26,10 +26,11 @@ import java.io.File
 
 class PlayerActivity: AppCompatActivity() {
 
-    private var songName: String? = ""
+    private lateinit var songName: String
+    private lateinit var musicService: MusicPlayerService
+    private lateinit var playIntent: Intent
+
     private var catProgress: CatLoadingView = CatLoadingView()
-    private var musicService: MusicPlayerService? = null
-    private var playIntent: Intent? = null
     private val musicConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
             val binder = iBinder as MusicPlayerService.MyBinder
@@ -51,16 +52,13 @@ class PlayerActivity: AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (playIntent == null) {
-            playIntent = Intent(this, MusicPlayerService::class.java)
-            startService(playIntent)
-            bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE)
-        }
+        playIntent = Intent(this, MusicPlayerService::class.java)
+        startService(playIntent)
+        bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onDestroy() {
         stopService(playIntent)
-        musicService = null
         super.onDestroy()
     }
 
@@ -68,16 +66,16 @@ class PlayerActivity: AppCompatActivity() {
         val b = intent.extras
         if (b != null) {
             val path = b.getString("SONG_PATH")
-            musicService?.setSong(path!!)
+            musicService.setSong(path)
             changePlayButton()
         }
     }
 
     fun checkMp3() {
-        if (songName!!.contains(".mp3"))
-            fab.setVisibility(View.INVISIBLE)
+        if (songName.contains(".mp3"))
+            fab.visibility = View.INVISIBLE
         else
-            fab.setVisibility(View.VISIBLE)
+            fab.visibility = View.VISIBLE
     }
 
     private fun convertFileToMp3(file: File) {
@@ -105,7 +103,7 @@ class PlayerActivity: AppCompatActivity() {
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         catProgress.setText("Converting ...")
-        catProgress.setCancelable(false)
+        catProgress.isCancelable = false
     }
 
     fun stopAnimation() {
@@ -114,18 +112,18 @@ class PlayerActivity: AppCompatActivity() {
     }
 
     fun refreshList() {
-        musicService?.getSongs()
+        musicService.getSongs()
         stopAnimation()
     }
 
     fun changePlayButton() {
-        if (musicService?.isPlaying()!!) {
+        if (musicService.isPlaying()) {
             play_button.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play))
-            musicService?.pauseSong()
+            musicService.pauseSong()
         } else {
             play_button.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_pause))
-            songName = musicService?.playSong()
-            song_name.setText(songName)
+            songName = musicService.playSong()
+            song_name.text = songName
             checkMp3()
             setImage()
         }
@@ -133,24 +131,24 @@ class PlayerActivity: AppCompatActivity() {
 
     fun setImage() {
         doAsync {
-            var songTitle = songName?.replace(".webm","")?.replace(".mp3","")
+            var songTitle = songName.replace(".webm","").replace(".mp3","")
             var res = MusicApp.database?.songDao()?.findSongByName(songTitle)?.image
             uiThread {
                 if (res != null)
                     Picasso.get().load(res).into(imageview)
                 else
-                    Picasso.get().load("https://img.youtube.com/vi/1G4isv_Fylg/hqdefault.jpg").into(imageview)
+                    Picasso.get().load(getString(R.string.default_image)).into(imageview)
             }
         }
     }
 
     fun nextSong(view: View) {
-        musicService?.nextSong()
+        musicService.nextSong()
         changePlayButton()
     }
 
     fun prevSong(view: View) {
-        musicService?.prevSong()
+        musicService.prevSong()
         changePlayButton()
     }
 
@@ -164,7 +162,7 @@ class PlayerActivity: AppCompatActivity() {
     }
 
     fun onFabClick() {
-        convertFileToMp3(musicService!!.getFile())
+        convertFileToMp3(musicService.getFile())
     }
 
 }

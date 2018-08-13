@@ -3,4 +3,5 @@
     <string name="channel_name">MusicApp</string>
     <string name="channel_description">DownloadSuccessful</string>
     <string name="title_activity_player">PlayerActivity</string>
+    <string name="default_image">https://img.youtube.com/vi/1G4isv_Fylg/hqdefault.jpg</string>
 </resources>

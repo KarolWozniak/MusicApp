@@ -36,6 +36,7 @@ public class DownloadApiHelper {
     private String Url;
     private static MainActivity mainActivity;
 
+
     public DownloadApiHelper(String fileName, String Url, MainActivity mainActivity) {
         this.fileName = fileName;
         this.Url = Url;
