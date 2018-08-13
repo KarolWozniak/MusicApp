@@ -132,12 +132,9 @@ class PlayerActivity: AppCompatActivity() {
     fun setImage() {
         doAsync {
             var songTitle = songName.replace(".webm","").replace(".mp3","")
-            var res = MusicApp.database?.songDao()?.findSongByName(songTitle)?.image
+            var res = MusicApp.database.songDao().findSongByName(songTitle).image
             uiThread {
-                if (res != null)
-                    Picasso.get().load(res).into(imageview)
-                else
-                    Picasso.get().load(getString(R.string.default_image)).into(imageview)
+                Picasso.get().load(res).into(imageview)
             }
         }
     }

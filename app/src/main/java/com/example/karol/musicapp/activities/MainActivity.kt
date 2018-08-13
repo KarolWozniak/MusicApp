@@ -114,7 +114,7 @@ class MainActivity: FragmentActivity() {
             val song = Song(data.video.title, parser.getImage(imageNumber))
             doAsync {
                 val db = MusicApp.database
-                db?.songDao()?.insertSong(song)
+                db.songDao().insertSong(song)
                 Log.d("DAO","Insert " + song )
             }
         } else {

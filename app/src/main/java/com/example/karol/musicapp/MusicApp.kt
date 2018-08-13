@@ -9,7 +9,7 @@ import com.example.karol.musicapp.Data.AppDatabase
 class MusicApp : Application() {
 
     companion object {
-        var database: AppDatabase? = null
+        lateinit var database: AppDatabase
     }
 
     override fun onCreate() {
