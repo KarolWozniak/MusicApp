@@ -9,8 +9,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.FragmentActivity
 import android.support.v4.view.PagerAdapter
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -29,7 +29,7 @@ import com.example.karol.musicapp.network.DataApiHelper
 import com.example.karol.musicapp.network.DownloadApiHelper
 import org.jetbrains.anko.doAsync
 
-class MainActivity: FragmentActivity() {
+class MainActivity: AppCompatActivity() {
 
     private lateinit var data: DataApiHelper
     private lateinit var parser: Parser
@@ -52,6 +52,7 @@ class MainActivity: FragmentActivity() {
         this.mLayoutManager = LinearLayoutManager(this)
         audio_list.layoutManager = mLayoutManager
         this.isRunning = true
+        setSupportActionBar(main_toolbar)
     }
 
     fun getIntentData() {
