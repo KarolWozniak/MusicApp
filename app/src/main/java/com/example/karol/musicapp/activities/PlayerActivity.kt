@@ -57,6 +57,13 @@ class PlayerActivity: AppCompatActivity() {
         bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE)
     }
 
+    override fun onRestart() {
+        songName = musicService.getFile().name
+        song_name.text = musicService.getFile().name
+        setImage()
+        super.onRestart()
+    }
+
     override fun onDestroy() {
         stopService(playIntent)
         super.onDestroy()

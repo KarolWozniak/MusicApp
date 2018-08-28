@@ -138,16 +138,17 @@ class MainActivity: FragmentActivity() {
         startActivity(intent)
     }
 
-    public override fun onStop() {
+    override fun onStop() {
         super.onStop()
         isRunning = false
     }
 
-    public override fun onRestart() {
+    override fun onRestart() {
         super.onRestart()
         isRunning = true
         if (progressStop) {
             stopProgress()
         }
     }
+
 }

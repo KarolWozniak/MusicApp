@@ -99,7 +99,7 @@ class MusicPlayerService() : Service(), MediaPlayer.OnCompletionListener, MediaP
     }
 
     fun getFile(): File{
-        return songs.get(songNumber)
+        return songs[songNumber]
     }
 
     fun setSong(songPath: String){
